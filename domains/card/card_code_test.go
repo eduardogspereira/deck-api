@@ -3,7 +3,7 @@ package card_test
 import (
 	"testing"
 
-	"github.com/eduardogspereira/deck-api/card"
+	"github.com/eduardogspereira/deck-api/domains/card"
 )
 
 func TestNewCard(t *testing.T) {

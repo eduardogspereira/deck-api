@@ -3,7 +3,7 @@ package deck_test
 import (
 	"testing"
 
-	"github.com/eduardogspereira/deck-api/deck"
+	"github.com/eduardogspereira/deck-api/domains/deck"
 )
 
 func TestNewDeckDefaultValues(t *testing.T) {
