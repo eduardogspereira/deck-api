@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/eduardogspereira/deck-api/card"
+	"github.com/eduardogspereira/deck-api/domains/card"
 )
 
 // Options implements the options object that
