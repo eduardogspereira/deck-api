@@ -17,7 +17,6 @@ func NewHTTPHandler(deckRepo deck.Repository) http.Handler {
 
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
-	config.AddAllowHeaders("Authorization")
 	router.Use(cors.New(config))
 
 	router.POST("/deck", deckHandler.CreateBuilder(deckRepo))

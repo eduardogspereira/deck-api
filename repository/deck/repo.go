@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// Repo contains the repository implementation for the deck
+// Repo contains the repository implementation for the deck.
 type Repo struct {
 	db *gorm.DB
 }
