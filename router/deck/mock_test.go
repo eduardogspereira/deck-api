@@ -11,7 +11,7 @@ type MockedDeckRepo struct {
 	returnErrorOnSave bool
 }
 
-func (m MockedDeckRepo) Save(d deck.Deck) (deck.Deck, error) {
+func (m MockedDeckRepo) Save(d *deck.Deck) (*deck.Deck, error) {
 	d.ID = m.id
 
 	if m.returnErrorOnSave {

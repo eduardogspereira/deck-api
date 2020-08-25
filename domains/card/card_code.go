@@ -70,14 +70,15 @@ func parseCode(s string) (code, error) {
 	cardCode.value = value
 	cardCode.suit = suit
 
-	if !isValidCode(cardCode) {
+	if !IsValidCode(cardCode) {
 		err = errors.New("parseCode " + s + ": the provided card code is not valid")
 	}
 
 	return cardCode, err
 }
 
-func isValidCode(cardCode code) bool {
+// IsValidCode validates if the code is valid
+func IsValidCode(cardCode code) bool {
 	_, hasValue := valuesByCode[cardCode.value]
 	_, hasSuit := suitsByCode[cardCode.suit]
 
