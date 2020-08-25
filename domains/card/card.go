@@ -5,5 +5,4 @@ type Card struct {
 	Value string
 	Suit  string
 	Code  string
-	Drew  bool
 }

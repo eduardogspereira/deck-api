@@ -40,3 +40,25 @@ func CreateBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 
 	return create
 }
+
+// LoadBuilder handles the load of a deck.
+func LoadBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
+	load := func(c *gin.Context) {
+		deckID := c.Param("deckID")
+
+		d, err := deckRepo.FindById(deckID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
+			return
+		}
+
+		if d.ID == "" {
+			c.JSON(http.StatusNotFound, gin.H{"message": "no deck found for the specified id"})
+			return
+		}
+
+		c.JSON(http.StatusOK, toLoadReponse(d))
+	}
+
+	return load
+}

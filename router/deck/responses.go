@@ -1,9 +1,20 @@
 package deck
 
-// CreateResponse implements the object response interface
-// for the POST /deck.
-type CreateResponse struct {
+type createResponse struct {
 	DeckID    string `json:"deck_id"`
 	Shuffled  bool   `json:"shuffled"`
 	Remaining int    `json:"remaining"`
+}
+
+type cardResponse struct {
+	Value string `json:"value"`
+	Suit  string `json:"suit"`
+	Code  string `json:"code"`
+}
+
+type loadResponse struct {
+	DeckID    string         `json:"deck_id"`
+	Shuffled  bool           `json:"shuffled"`
+	Remaining int            `json:"remaining"`
+	Cards     []cardResponse `json:"cards"`
 }
