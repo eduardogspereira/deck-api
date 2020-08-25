@@ -6,13 +6,17 @@ import (
 	"github.com/eduardogspereira/deck-api/domains/deck"
 	deckRepo "github.com/eduardogspereira/deck-api/repository/deck"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
+
+var log = logrus.New()
 
 // CreateBuilder handles the creation of a new deck.
 func CreateBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 	create := func(c *gin.Context) {
 		options, err := bindCreateOptions(c)
 		if err != nil {
+			log.Warn(err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -23,12 +27,14 @@ func CreateBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 		}
 		d, err := deck.New(deckOptions)
 		if err != nil {
+			log.Error(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return
 		}
 
 		d, err = deckRepo.Save(d)
 		if err != nil {
+			log.Error(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return
 		}
@@ -46,11 +52,13 @@ func LoadBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 
 		d, err := deckRepo.FindByID(deckID)
 		if err != nil {
+			log.Error(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return
 		}
 
 		if d.ID == "" {
+			log.Warn(err)
 			c.JSON(http.StatusNotFound, gin.H{"message": "no deck found for the specified id"})
 			return
 		}
@@ -66,6 +74,7 @@ func DrawCardBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 	drawCard := func(c *gin.Context) {
 		options, err := bindDrawCardOptions(c)
 		if err != nil {
+			log.Warn(err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "invalid count parameter provided"})
 			return
 		}
@@ -74,16 +83,19 @@ func DrawCardBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 
 		d, err := deckRepo.FindByID(deckID)
 		if err != nil {
+			log.Error(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return
 		}
 
 		if d.ID == "" {
+			log.Warn(err)
 			c.JSON(http.StatusNotFound, gin.H{"message": "no deck found for the specified id"})
 			return
 		}
 
 		if d.Remaining() < options.Count {
+			log.Warn(err)
 			c.JSON(http.StatusUnprocessableEntity,
 				gin.H{
 					"message":   "the count provided is greater than the remaining cards in the deck",

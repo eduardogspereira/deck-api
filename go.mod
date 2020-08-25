@@ -15,6 +15,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
+	github.com/sirupsen/logrus v1.6.0
+	github.com/toorop/gin-logrus v0.0.0-20190701131413-6c374ad36b67
 	golang.org/x/sys v0.0.0-20200824131525-c12d262b63d8 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 )
