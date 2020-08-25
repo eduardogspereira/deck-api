@@ -18,3 +18,7 @@ type loadResponse struct {
 	Remaining int            `json:"remaining"`
 	Cards     []cardResponse `json:"cards"`
 }
+
+type drawCardResponse struct {
+	Cards []cardResponse `json:"cards"`
+}

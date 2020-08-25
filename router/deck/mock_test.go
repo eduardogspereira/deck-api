@@ -30,3 +30,7 @@ func (m MockedDeckRepo) FindById(deckId string) (*deck.Deck, error) {
 
 	return &m.deck, nil
 }
+
+func (m MockedDeckRepo) Update(d *deck.Deck) error {
+	return nil
+}

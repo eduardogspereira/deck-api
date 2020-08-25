@@ -163,7 +163,7 @@ var _ = Describe("Deck Hanlders", func() {
 					},
 				},
 			}
-			router.GET("/deck/:deckId", deck.LoadBuilder(deckRepo))
+			router.GET("/deck/:deckID", deck.LoadBuilder(deckRepo))
 
 			req, _ := http.NewRequest("GET", "/deck/123", nil)
 			router.ServeHTTP(rr, req)
@@ -192,7 +192,7 @@ var _ = Describe("Deck Hanlders", func() {
 					Shuffled: false,
 				},
 			}
-			router.GET("/deck/:deckId", deck.LoadBuilder(deckRepo))
+			router.GET("/deck/:deckID", deck.LoadBuilder(deckRepo))
 
 			req, _ := http.NewRequest("GET", "/deck/123", nil)
 			router.ServeHTTP(rr, req)
@@ -248,6 +248,106 @@ var _ = Describe("Deck Hanlders", func() {
 			It("should return the correct body", func() {
 				Expect(rr.Body.String()).To(
 					Equal(`{"message":"no deck found for the specified id"}`),
+				)
+			})
+		})
+	})
+
+	Describe("Draw", func() {
+		Context("When requests to draw cards", func() {
+			router := routerFactory()
+			rr := httptest.NewRecorder()
+
+			deckRepo := MockedDeckRepo{
+				deck: deckDomain.Deck{
+					ID: "123",
+					Cards: []card.Card{
+						card.Card{Code: "1A", Suit: "ACES", Value: "1"},
+						card.Card{Code: "10C", Suit: "CLUBS", Value: "10"},
+					},
+				},
+			}
+			router.POST("/deck/:deckID/draw", deck.DrawCardBuilder(deckRepo))
+
+			req, _ := http.NewRequest("POST", "/deck/123/draw?count=1", nil)
+			router.ServeHTTP(rr, req)
+
+			It("should have the status_code equal 200", func() {
+				Expect(rr.Code).To(Equal(200))
+			})
+
+			It("should return the correct body", func() {
+				Expect(rr.Body.String()).To(
+					Equal(
+						`{"cards":[{"value":"10","suit":"CLUBS","code":"10C"}]}`,
+					),
+				)
+			})
+		})
+
+		Context("When count is not provided", func() {
+			router := routerFactory()
+			rr := httptest.NewRecorder()
+
+			deckRepo := MockedDeckRepo{}
+			router.POST("/deck/:deckID/draw", deck.DrawCardBuilder(deckRepo))
+
+			req, _ := http.NewRequest("POST", "/deck/123/draw", nil)
+			router.ServeHTTP(rr, req)
+
+			It("should have the status_code equal 400", func() {
+				Expect(rr.Code).To(Equal(400))
+			})
+
+			It("should return the correct body", func() {
+				Expect(rr.Body.String()).To(
+					Equal(`{"error":"invalid request"}`),
+				)
+			})
+		})
+
+		Context("When deck is not found", func() {
+			router := routerFactory()
+			rr := httptest.NewRecorder()
+
+			deckRepo := MockedDeckRepo{}
+			router.POST("/deck/:deckID/draw", deck.DrawCardBuilder(deckRepo))
+
+			req, _ := http.NewRequest("POST", "/deck/123/draw?count=123", nil)
+			router.ServeHTTP(rr, req)
+
+			It("should have the status_code equal 404", func() {
+				Expect(rr.Code).To(Equal(404))
+			})
+
+			It("should return the correct body", func() {
+				Expect(rr.Body.String()).To(
+					Equal(`{"message":"no deck found for the specified id"}`),
+				)
+			})
+		})
+
+		Context("When count is bigger than remaining cards", func() {
+			router := routerFactory()
+			rr := httptest.NewRecorder()
+
+			d, _ := deckDomain.New(deckDomain.Options{})
+			d.ID = "123"
+			deckRepo := MockedDeckRepo{
+				deck: *d,
+			}
+			router.POST("/deck/:deckID/draw", deck.DrawCardBuilder(deckRepo))
+
+			req, _ := http.NewRequest("POST", "/deck/123/draw?count=123", nil)
+			router.ServeHTTP(rr, req)
+
+			It("should have the status_code equal 422", func() {
+				Expect(rr.Code).To(Equal(422))
+			})
+
+			It("should return the correct body", func() {
+				Expect(rr.Body.String()).To(
+					Equal(`{"message":"the count provided is greater than the remaining cards in the deck"}`),
 				)
 			})
 		})

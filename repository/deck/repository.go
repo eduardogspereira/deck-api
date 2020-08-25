@@ -7,4 +7,5 @@ import "github.com/eduardogspereira/deck-api/domains/deck"
 type Repository interface {
 	FindById(string) (*deck.Deck, error)
 	Save(*deck.Deck) (*deck.Deck, error)
+	Update(*deck.Deck) error
 }

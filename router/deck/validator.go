@@ -38,3 +38,18 @@ func bindCreateOptions(c *gin.Context) (createOptions, error) {
 
 	return opt, err
 }
+
+type drawCardOptions struct {
+	Count int `form:"count" binding:"required"`
+}
+
+func bindDrawCardOptions(c *gin.Context) (drawCardOptions, error) {
+	var opt drawCardOptions
+	var err error
+
+	if err = c.ShouldBindQuery(&opt); err != nil {
+		err = errors.New("invalid request")
+	}
+
+	return opt, err
+}

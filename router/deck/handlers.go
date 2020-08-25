@@ -62,3 +62,46 @@ func LoadBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 
 	return load
 }
+
+// DrawCardBuilder draws cards from the specified deck.
+func DrawCardBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
+	drawCard := func(c *gin.Context) {
+		options, err := bindDrawCardOptions(c)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		deckID := c.Param("deckID")
+
+		d, err := deckRepo.FindById(deckID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
+			return
+		}
+
+		if d.ID == "" {
+			c.JSON(http.StatusNotFound, gin.H{"message": "no deck found for the specified id"})
+			return
+		}
+
+		if d.Remaining() < options.Count {
+			c.JSON(http.StatusUnprocessableEntity,
+				gin.H{"message": "the count provided is greater than the remaining cards in the deck"})
+			return
+		}
+
+		cards := d.DrawCards(options.Count)
+
+		err = deckRepo.Update(d)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
+			return
+		}
+
+		c.JSON(http.StatusOK, toDrawCardResponse(cards))
+	}
+
+	return drawCard
+}

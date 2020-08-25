@@ -35,3 +35,14 @@ func toLoadReponse(entity *deck.Deck) loadResponse {
 
 	return response
 }
+
+func toDrawCardResponse(cards []card.Card) drawCardResponse {
+	response := drawCardResponse{}
+
+	response.Cards = make([]cardResponse, 0)
+	for _, c := range cards {
+		response.Cards = append(response.Cards, toCardResponse(c))
+	}
+
+	return response
+}
