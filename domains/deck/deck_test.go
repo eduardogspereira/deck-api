@@ -10,6 +10,29 @@ import (
 )
 
 var _ = Describe("Deck", func() {
+	Describe("Deck.DrawCards", func() {
+		options := deck.Options{}
+		d, _ := deck.New(options)
+
+		cards := d.DrawCards(5)
+
+		It("should have returned 5 cards from the deck", func() {
+			Expect(cards).To(HaveLen(5))
+		})
+
+		It("should have returned the last cards from the deck", func() {
+			Expect(cards[4].Code).To(Equal("KH"))
+			Expect(cards[3].Code).To(Equal("QH"))
+			Expect(cards[2].Code).To(Equal("JH"))
+			Expect(cards[1].Code).To(Equal("10H"))
+			Expect(cards[0].Code).To(Equal("9H"))
+		})
+
+		It("should have updated the remaining cards in the deck", func() {
+			Expect(d.Remaining()).To(Equal(47))
+		})
+	})
+
 	Describe("New", func() {
 		Context("When default options are used", func() {
 			options := deck.Options{}

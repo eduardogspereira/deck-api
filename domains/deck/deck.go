@@ -37,6 +37,22 @@ func (d *Deck) Shuffle() {
 	})
 }
 
+// DrawCards get the cards from the top of the deck and update
+// the remaining cards in the deck.
+func (d *Deck) DrawCards(count int) []card.Card {
+	var cards []card.Card
+
+	if d.Remaining() < count {
+		cards = d.Cards
+		d.Cards = make([]card.Card, 0)
+	}
+
+	cards = d.Cards[d.Remaining()-count:]
+	d.Cards = d.Cards[:d.Remaining()-count]
+
+	return cards
+}
+
 // New returns a new deck based on the options provided.
 func New(options Options) (*Deck, error) {
 	var deck Deck
