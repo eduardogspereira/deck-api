@@ -6,17 +6,22 @@ import (
 	"testing"
 
 	"github.com/eduardogspereira/deck-api/router/healthcheck"
+	"github.com/gin-gonic/gin"
 )
 
+func setupRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	r := gin.New()
+	r.GET("/_health", healthcheck.Handler)
+	return r
+}
+
 func TestHealthCheckHandler(t *testing.T) {
-	req, err := http.NewRequest("GET", "/_health", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	router := setupRouter()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(healthcheck.Handler)
-	handler.ServeHTTP(rr, req)
+	req, _ := http.NewRequest("GET", "/_health", nil)
+	router.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
