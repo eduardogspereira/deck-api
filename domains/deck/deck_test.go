@@ -3,6 +3,8 @@ package deck_test
 import (
 	"testing"
 
+	"github.com/eduardogspereira/deck-api/domains/card"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -30,6 +32,34 @@ var _ = Describe("Deck", func() {
 
 		It("should have updated the remaining cards in the deck", func() {
 			Expect(d.Remaining()).To(Equal(47))
+		})
+	})
+
+	Describe("Deck.CardsToCodes", func() {
+		var d deck.Deck
+
+		d.Cards = []card.Card{
+			card.Card{Code: "KH"},
+			card.Card{Code: "QH"},
+			card.Card{Code: "10H"},
+		}
+
+		It("should have returned the correct array of card codes", func() {
+			Expect(d.CardsToCodes()).To(Equal([]string{"KH", "QH", "10H"}))
+		})
+	})
+
+	Describe("Deck.CodesToCards", func() {
+		cardCodes := []string{"KH", "QH", "10H"}
+
+		var d deck.Deck
+		cards := d.CodesToCards(cardCodes)
+
+		It("should have returned the correct array of card codes", func() {
+			Expect(cards).To(HaveLen(3))
+			Expect(cards[0].Value).To(Equal("KING"))
+			Expect(cards[1].Value).To(Equal("QUEEN"))
+			Expect(cards[2].Suit).To(Equal("HEARTS"))
 		})
 	})
 

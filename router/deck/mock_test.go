@@ -23,7 +23,7 @@ func (m MockedDeckRepo) Save(d *deck.Deck) (*deck.Deck, error) {
 	return d, nil
 }
 
-func (m MockedDeckRepo) FindById(deckId string) (*deck.Deck, error) {
+func (m MockedDeckRepo) FindByID(deckId string) (*deck.Deck, error) {
 	if m.returnErrorOnFindById {
 		return &m.deck, errors.New("error on find by id")
 	}

@@ -210,7 +210,7 @@ var _ = Describe("Deck Hanlders", func() {
 			})
 		})
 
-		Context("When deckRepo.FindById returns an error", func() {
+		Context("When deckRepo.FindByID returns an error", func() {
 			router := routerFactory()
 			rr := httptest.NewRecorder()
 

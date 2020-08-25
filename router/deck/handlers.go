@@ -46,7 +46,7 @@ func LoadBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 	load := func(c *gin.Context) {
 		deckID := c.Param("deckID")
 
-		d, err := deckRepo.FindById(deckID)
+		d, err := deckRepo.FindByID(deckID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return
@@ -75,7 +75,7 @@ func DrawCardBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 
 		deckID := c.Param("deckID")
 
-		d, err := deckRepo.FindById(deckID)
+		d, err := deckRepo.FindByID(deckID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return

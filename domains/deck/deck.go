@@ -53,6 +53,25 @@ func (d *Deck) DrawCards(count int) []card.Card {
 	return cards
 }
 
+// CardsToCodes transform the cards into an array of card codes.
+func (d *Deck) CardsToCodes() []string {
+	cardCodes := make([]string, 0)
+	for _, c := range d.Cards {
+		cardCodes = append(cardCodes, c.Code)
+	}
+	return cardCodes
+}
+
+// CodesToCards transform an array of card codes into an array of cards.
+func (d *Deck) CodesToCards(cardCodes []string) []card.Card {
+	cards := make([]card.Card, 0)
+	for _, code := range cardCodes {
+		c, _ := card.FromCode(code)
+		cards = append(cards, c)
+	}
+	return cards
+}
+
 // New returns a new deck based on the options provided.
 func New(options Options) (*Deck, error) {
 	var deck Deck
