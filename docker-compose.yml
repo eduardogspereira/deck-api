@@ -1,10 +1,30 @@
 version: "3.7"
+
 services:
-  db:
+  deck-api:
+    build: .
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "3000:3000"
+    environment:
+      PGHOST: "postgres"
+    healthcheck:
+      test: curl -f http://deck-api:3000/_health || exit 1
+      interval: 10s
+      retries: 5
+
+  postgres:
     image: postgres:latest
+    restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: ${PGDATABASE}
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
+
+  wait:
+    image: dokku/wait
