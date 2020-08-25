@@ -3,68 +3,52 @@ package card_test
 import (
 	"testing"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
 	"github.com/eduardogspereira/deck-api/domains/card"
 )
 
-func TestNewCard(t *testing.T) {
-	c, _ := card.FromCode("QH")
+var _ = Describe("CardCode", func() {
+	Describe("FromCode", func() {
+		Context("When card code is valid", func() {
+			It("should create a Card with the correct properties for QH", func() {
+				c, _ := card.FromCode("QH")
+				Expect(c.Code).To(Equal("QH"))
+				Expect(c.Value).To(Equal("QUEEN"))
+				Expect(c.Suit).To(Equal("HEARTS"))
+			})
 
-	expectedCardCode := "QH"
-	if c.Code != expectedCardCode {
-		t.Errorf("c.Code = %v, want %v", c.Code, expectedCardCode)
-	}
+			It("should create a Card with the correct properties for 4D", func() {
+				c, _ := card.FromCode("4D")
+				Expect(c.Code).To(Equal("4D"))
+				Expect(c.Value).To(Equal("4"))
+				Expect(c.Suit).To(Equal("DIAMONDS"))
+			})
 
-	expectedCardValue := "QUEEN"
-	if c.Value != expectedCardValue {
-		t.Errorf("card.Value = %v, want %v", c.Value, expectedCardValue)
-	}
+			It("should create a Card with the correct properties for 10S", func() {
+				c, _ := card.FromCode("10S")
+				Expect(c.Code).To(Equal("10S"))
+				Expect(c.Value).To(Equal("10"))
+				Expect(c.Suit).To(Equal("SPADES"))
+			})
+		})
 
-	expectedCardSuit := "HEARTS"
-	if c.Suit != expectedCardSuit {
-		t.Errorf("card.Suit = %v, want %v", c.Suit, expectedCardSuit)
-	}
+		Context("When card code is invalid", func() {
+			It("should return an error for EZ", func() {
+				_, err := card.FromCode("EZ")
+				Expect(err).To(Not(BeNil()))
+			})
 
-	c, _ = card.FromCode("4D")
+			It("should return an error for an empty string", func() {
+				_, err := card.FromCode("")
+				Expect(err).To(Not(BeNil()))
+			})
+		})
+	})
+})
 
-	expectedCardCode = "4D"
-	if c.Code != expectedCardCode {
-		t.Errorf("card.Code = %v, want %v", c.Code, expectedCardCode)
-	}
-
-	expectedCardValue = "4"
-	if c.Value != expectedCardValue {
-		t.Errorf("card.Value = %v, want %v", c.Value, expectedCardValue)
-	}
-
-	expectedCardSuit = "DIAMONDS"
-	if c.Suit != expectedCardSuit {
-		t.Errorf("card.Suit = %v, want %v", c.Suit, expectedCardSuit)
-	}
-
-	c, _ = card.FromCode("10S")
-
-	expectedCardCode = "10S"
-	if c.Code != expectedCardCode {
-		t.Errorf("card.Code = %v, want %v", c.Code, expectedCardCode)
-	}
-
-	expectedCardValue = "10"
-	if c.Value != expectedCardValue {
-		t.Errorf("card.Value = %v, want %v", c.Value, expectedCardValue)
-	}
-
-	expectedCardSuit = "SPADES"
-	if c.Suit != expectedCardSuit {
-		t.Errorf("card.Suit = %v, want %v", c.Suit, expectedCardSuit)
-	}
-
-	_, err := card.FromCode("EZ")
-	if err == nil {
-		t.Errorf("expect error not to be nil")
-	}
-
-	_, err = card.FromCode("")
-	if err == nil {
-		t.Errorf("expect error not to be nil")
-	}
+func TestCardCode(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "CardCode Suite")
 }

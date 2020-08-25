@@ -5,6 +5,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
 	"github.com/eduardogspereira/deck-api/router/healthcheck"
 	"github.com/gin-gonic/gin"
 )
@@ -16,21 +19,23 @@ func setupRouter() *gin.Engine {
 	return r
 }
 
-func TestHealthCheckHandler(t *testing.T) {
-	router := setupRouter()
+var _ = Describe("HealthCheck", func() {
+	var router = setupRouter()
 
 	rr := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/_health", nil)
 	router.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
+	It("should have returned status_code 200", func() {
+		Expect(rr.Code).To(Equal(http.StatusOK))
+	})
 
-	expectedBody := "OK"
-	if rr.Body.String() != expectedBody {
-		t.Errorf("handler returned unexpected body: got %v want %v",
-			rr.Body.String(), expectedBody)
-	}
+	It("should have returned OK in body", func() {
+		Expect(rr.Body.String()).To(Equal("OK"))
+	})
+})
+
+func TestHealthCheck(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "HealthCheck Suite")
 }

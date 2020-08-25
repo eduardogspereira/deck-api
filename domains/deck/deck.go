@@ -23,12 +23,12 @@ type Deck struct {
 }
 
 // Remaining returns how many cards are in the deck.
-func (d Deck) Remaining() int {
+func (d *Deck) Remaining() int {
 	return len(d.Cards)
 }
 
 // Shuffle implements the card shuffle on the deck
-func (d Deck) Shuffle() {
+func (d *Deck) Shuffle() {
 	d.Shuffled = true
 
 	rand.Seed(time.Now().UnixNano())
@@ -38,7 +38,7 @@ func (d Deck) Shuffle() {
 }
 
 // New returns a new deck based on the options provided.
-func New(options Options) (Deck, error) {
+func New(options Options) (*Deck, error) {
 	var deck Deck
 	var err error
 
@@ -50,7 +50,7 @@ func New(options Options) (Deck, error) {
 	for _, cardCode := range cardCodes {
 		c, err := card.FromCode(cardCode)
 		if err != nil {
-			return deck, fmt.Errorf("failed to create new deck: %v", err)
+			return &deck, fmt.Errorf("failed to create new deck: %v", err)
 		}
 		deck.Cards = append(deck.Cards, c)
 	}
@@ -59,7 +59,7 @@ func New(options Options) (Deck, error) {
 		deck.Shuffle()
 	}
 
-	return deck, err
+	return &deck, err
 }
 
 func makeAllCardCodes() []string {

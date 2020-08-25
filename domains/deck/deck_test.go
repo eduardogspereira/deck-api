@@ -3,88 +3,76 @@ package deck_test
 import (
 	"testing"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
 	"github.com/eduardogspereira/deck-api/domains/deck"
 )
 
-func TestNewDeckDefaultValues(t *testing.T) {
-	options := deck.Options{}
-	d, _ := deck.New(options)
+var _ = Describe("Deck", func() {
+	Describe("New", func() {
+		Context("When default options are used", func() {
+			options := deck.Options{}
+			d, _ := deck.New(options)
 
-	if d.Shuffled {
-		t.Error("expect deck not to be shuffled")
-	}
+			It("should have shuffled property equal false", func() {
+				Expect(d.Shuffled).To(BeFalse())
+			})
 
-	expectedRemaining := 52
-	if d.Remaining() != expectedRemaining {
-		t.Errorf("d.Remaining = %v, want %v", d.Remaining(), expectedRemaining)
-	}
+			It("should should contains 52 remaining cards", func() {
+				Expect(d.Remaining()).To(Equal(52))
+			})
 
-	expectCardLengths := 52
-	if len(d.Cards) != expectCardLengths {
-		t.Errorf("len(d.Cards) = %v, want %v", len(d.Cards), expectCardLengths)
-	}
+			It("first and last cards should be in order", func() {
+				Expect(d.Cards[0].Code).To(Equal("AS"))
+				Expect(d.Cards[51].Code).To(Equal("KH"))
+			})
+		})
 
-	expectedFirstCardCode := "AS"
-	if d.Cards[0].Code != expectedFirstCardCode {
-		t.Errorf("len(d.Cards) = %v, want %v", d.Cards[0].Code, expectedFirstCardCode)
-	}
+		Context("When shuffle option is used", func() {
+			options := deck.Options{
+				Shuffle: true,
+			}
+			d, _ := deck.New(options)
 
-	expectedLastCardCode := "KH"
-	if d.Cards[len(d.Cards)-1].Code != expectedLastCardCode {
-		t.Errorf("len(d.Cards) = %v, want %v", d.Cards[len(d.Cards)-1].Code, expectedLastCardCode)
-	}
-}
+			It("should have shuffled property equal true", func() {
+				Expect(d.Shuffled).To(BeTrue())
+			})
 
-func TestNewDeckWithShuffledOption(t *testing.T) {
-	options := deck.Options{
-		Shuffle: true,
-	}
-	d, _ := deck.New(options)
+			It("first 5 cards should not be in order", func() {
+				Expect(d.Cards[0].Code == "AS" &&
+					d.Cards[1].Code == "2S" &&
+					d.Cards[2].Code == "3S" &&
+					d.Cards[3].Code == "4S" &&
+					d.Cards[4].Code == "5S").To(BeFalse())
+			})
+		})
 
-	if d.Shuffled {
-		t.Error("expect deck not to be shuffled")
-	}
+		Context("When wanted cards option is used", func() {
+			options := deck.Options{
+				WantedCards: []string{"AS", "KD", "AC", "2C", "KH"},
+			}
+			d, _ := deck.New(options)
 
-	expectedRemaining := 52
-	if d.Remaining() != expectedRemaining {
-		t.Errorf("d.Remaining = %v, want %v", d.Remaining(), expectedRemaining)
-	}
+			It("should have the correct remaining cards", func() {
+				Expect(d.Remaining()).To(Equal(5))
+			})
+		})
 
-	expectCardLengths := 52
-	if len(d.Cards) != expectCardLengths {
-		t.Errorf("len(d.Cards) = %v, want %v", len(d.Cards), expectCardLengths)
-	}
+		Context("When invalid option is provided", func() {
+			options := deck.Options{
+				WantedCards: []string{"ZD"},
+			}
+			_, err := deck.New(options)
 
-	expectedFirstCardCode := "AS"
-	expectedSecondCardCode := "2S"
-	expectedThirthCardCode := "3S"
-	expectedFourthCardCode := "4S"
-	expectedFifthCardCode := "5S"
-	if d.Cards[0].Code == expectedFirstCardCode &&
-		d.Cards[1].Code == expectedSecondCardCode &&
-		d.Cards[2].Code == expectedThirthCardCode &&
-		d.Cards[3].Code == expectedFourthCardCode &&
-		d.Cards[4].Code == expectedFifthCardCode {
-		t.Error("expected deck to be shuffled")
-	}
-}
+			It("should return an error", func() {
+				Expect(err).To(Not(BeNil()))
+			})
+		})
+	})
+})
 
-func TestNewDeckWantedCardOption(t *testing.T) {
-	options := deck.Options{
-		WantedCards: []string{"AS", "KD", "AC", "2C", "KH"},
-	}
-	d, _ := deck.New(options)
-
-	expectedRemaining := 5
-	if d.Remaining() != expectedRemaining {
-		t.Errorf("d.Remaining = %v, want %v", d.Remaining(), expectedRemaining)
-	}
-
-	options = deck.Options{
-		WantedCards: []string{"2Z"},
-	}
-	d, err := deck.New(options)
-	if err == nil {
-		t.Errorf("expect error not to be nil")
-	}
+func TestDeck(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Deck Suite")
 }
