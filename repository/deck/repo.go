@@ -2,6 +2,7 @@ package deck
 
 import (
 	domain "github.com/eduardogspereira/deck-api/domains/deck"
+	"github.com/gofrs/uuid"
 	"github.com/jinzhu/gorm"
 )
 
@@ -33,6 +34,11 @@ func (r *Repo) Save(deck *domain.Deck) (*domain.Deck, error) {
 // FindByID finds the deck by its ID.
 func (r *Repo) FindByID(deckID string) (*domain.Deck, error) {
 	result := &Deck{}
+
+	if _, err := uuid.FromString(deckID); err != nil {
+		return toDomainModel(result), nil
+	}
+
 	query := r.db.Where("id = ?", deckID).First(result)
 
 	if err := query.Error; err != nil {

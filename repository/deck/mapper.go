@@ -21,7 +21,9 @@ func toDBModel(entity *deck.Deck) *Deck {
 func toDomainModel(entity *Deck) *deck.Deck {
 	var d deck.Deck
 
-	d.ID = entity.ID.String()
+	if entity.ID != uuid.Nil {
+		d.ID = entity.ID.String()
+	}
 	d.Shuffled = entity.Shuffled
 	d.Cards = d.CodesToCards(entity.CardCodes)
 
