@@ -1,7 +1,6 @@
 package deck
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/eduardogspereira/deck-api/domains/deck"
@@ -24,7 +23,6 @@ func CreateBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 		}
 		d, err := deck.New(deckOptions)
 		if err != nil {
-			fmt.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 			return
 		}
@@ -68,8 +66,7 @@ func DrawCardBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 	drawCard := func(c *gin.Context) {
 		options, err := bindDrawCardOptions(c)
 		if err != nil {
-			fmt.Println(err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"message": "invalid count parameter provided"})
 			return
 		}
 
@@ -88,7 +85,10 @@ func DrawCardBuilder(deckRepo deckRepo.Repository) func(c *gin.Context) {
 
 		if d.Remaining() < options.Count {
 			c.JSON(http.StatusUnprocessableEntity,
-				gin.H{"message": "the count provided is greater than the remaining cards in the deck"})
+				gin.H{
+					"message":   "the count provided is greater than the remaining cards in the deck",
+					"remaining": d.Remaining(),
+				})
 			return
 		}
 

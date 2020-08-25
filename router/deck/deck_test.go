@@ -301,7 +301,7 @@ var _ = Describe("Deck Hanlders", func() {
 
 			It("should return the correct body", func() {
 				Expect(rr.Body.String()).To(
-					Equal(`{"error":"invalid request"}`),
+					Equal(`{"message":"invalid count parameter provided"}`),
 				)
 			})
 		})
@@ -347,7 +347,7 @@ var _ = Describe("Deck Hanlders", func() {
 
 			It("should return the correct body", func() {
 				Expect(rr.Body.String()).To(
-					Equal(`{"message":"the count provided is greater than the remaining cards in the deck"}`),
+					Equal(`{"message":"the count provided is greater than the remaining cards in the deck","remaining":52}`),
 				)
 			})
 		})
