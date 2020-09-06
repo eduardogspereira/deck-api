@@ -100,11 +100,13 @@ HTTP/1.1 201 Created
 Content-Type: application/json; charset=utf-8
 Date: Tue, 25 Aug 2020 09:47:27 GMT
 Content-Length: 80
+```
 
+```json
 {
-    "deck_id":"6a25b964-1d82-4854-b763-c13fb3838f2b",
-    "shuffled":true,
-    "remaining":5
+  "deck_id": "6a25b964-1d82-4854-b763-c13fb3838f2b",
+  "shuffled": true,
+  "remaining": 5
 }
 ```
 
@@ -121,18 +123,20 @@ HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 Date: Tue, 25 Aug 2020 09:48:00 GMT
 Content-Length: 310
+```
 
+```json
 {
-    "deck_id":"6a25b964-1d82-4854-b763-c13fb3838f2b",
-    "shuffled":true,
-    "remaining":5,
-    "cards":[
-        {"value":"KING","suit":"DIAMONDS","code":"KD"},
-        {"value":"2","suit":"CLUBS","code":"2C"},
-        {"value":"ACE","suit":"CLUBS","code":"AC"},
-        {"value":"ACE","suit":"SPADES","code":"AS"},
-        {"value":"KING","suit":"HEARTS","code":"KH"}
-    ]
+  "deck_id": "6a25b964-1d82-4854-b763-c13fb3838f2b",
+  "shuffled": true,
+  "remaining": 5,
+  "cards": [
+    { "value": "KING", "suit": "DIAMONDS", "code": "KD" },
+    { "value": "2", "suit": "CLUBS", "code": "2C" },
+    { "value": "ACE", "suit": "CLUBS", "code": "AC" },
+    { "value": "ACE", "suit": "SPADES", "code": "AS" },
+    { "value": "KING", "suit": "HEARTS", "code": "KH" }
+  ]
 }
 ```
 
@@ -155,12 +159,14 @@ HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 Date: Tue, 25 Aug 2020 09:50:42 GMT
 Content-Length: 100
+```
 
+```json
 {
-    "cards":[
-        {"value":"ACE","suit":"SPADES","code":"AS"},
-        {"value":"KING","suit":"HEARTS","code":"KH"}
-    ]
+  "cards": [
+    { "value": "ACE", "suit": "SPADES", "code": "AS" },
+    { "value": "KING", "suit": "HEARTS", "code": "KH" }
+  ]
 }
 ```
 
